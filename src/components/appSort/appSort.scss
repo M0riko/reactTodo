@@ -1,0 +1,43 @@
+.option {
+    margin: 0 auto;
+    max-width: 320px;
+}
+label {
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 5px;
+}
+  #mySelect {
+    margin-top: 10px;
+    border: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    color: rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+  }
+
+  #mySelect option {
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    height: 20px;
+  }
+
+  #mySelect option:hover {
+    background-color: rgba(64, 175, 255, 0.2);
+    color: rgba(64, 175, 255, 0.8);
+  }
+  
+  #mySelect option:checked {
+    font-size: 16px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+  }
