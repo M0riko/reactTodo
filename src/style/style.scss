@@ -66,10 +66,7 @@ button {
 
 @media (max-width: 500px) {
     .task {
-        padding: 10px 20px 10px 20px;
-    }
-    #change-text{
-        width: 80px;
+        padding: 10px 20px 10px 20px !important;
     }
     .doneChange {
         font-size: 11px;
@@ -84,16 +81,7 @@ button {
     .paginat {
         bottom: 5px;
     }
-}
-
-@media (max-height: 920px) {
-    .paginat {
-        bottom: 5px;
-    }
-}
-
-@media (min-height: 950px) {
-    .paginat {
-        bottom: 5px;
+    #change-text{
+        width: 100px !important;
     }
 }

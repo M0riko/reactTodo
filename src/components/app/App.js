@@ -77,14 +77,14 @@ const App = () => {
             break;
             case 'editText' :
                 SetTask(task.map(el => {
-                    if(el.id === id) {
+                    if(el.id === id && editTask !== '' && editTask.length < 20) {
                         el.text = editTask;
                     }
                     return el;
                 }))
 
                 SetTask(task.map(el => {
-                    if(el.edit === true) {
+                    if(el.id === id) {
                         el.edit = false
                     }
                     return el;

@@ -1,6 +1,7 @@
 import './appAddItem.scss'
 
 const AppAddItem = ({newTask, onSetValue, value}) => {
+        
     return (
         <form action="#" className="form">
             <input type="text" id="input-text" placeholder="Todo..." onChange={(e) => onSetValue(e)} value={value}/>

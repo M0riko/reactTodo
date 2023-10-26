@@ -8,7 +8,7 @@ const Item = ({text, id, done, sesss, del, edit, edits, editText, onSetText}) =>
     return (
         <div id={id} className={`addTask task`} style={{display: 'flex'}}>
                 <form action="#" className={`change-task ${edit === false ? 'none' : ''}`}>
-                <input type="text" id="change-text" onChange={onSetText} defaultValue={text}/>
+                <input type="text" id="change-text" onChange={(e) => onSetText(e)} defaultValue={text}/>
                 <button className="doneChange" onClick={editText}>EDIT</button>
                 </form>
                     <div className={`task-text ${done && 'line'} ${edit === false ? '' : 'none'}` } >{text}</div>
