@@ -7,6 +7,7 @@ import AppSort from '../appSort/AppSort';
 import AppAddItem from '../appAddItem/AppAddItem'
 import TaskList from '../taskList/TaskList';
 import Pagination from '../pagination/Pagination'
+import Modal from '../modal/modal'
 
 const App = () => {
     const tasks = JSON.parse(localStorage.getItem('userData')) || [];
@@ -20,6 +21,10 @@ const App = () => {
     const [editTask, setEditTask] = useState('');
 
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const [modalText, setModalText] = useState('');
 
     const itemsPerPage = 4;
 
@@ -40,7 +45,7 @@ const App = () => {
         e.preventDefault();
         const uId = Math.floor(Math.random() * 1000000) + 1;
         const newTask = {id: uId, text: text, done: false, edit: false};
-        if(text.length !== 0 && text.length < 20) {
+        if(text.length !== 0) {
             SetTask(task => ([...task, newTask]))
             SetValue('')
         }
@@ -77,7 +82,7 @@ const App = () => {
             break;
             case 'editText' :
                 SetTask(task.map(el => {
-                    if(el.id === id && editTask !== '' && editTask.length < 20) {
+                    if(el.id === id && editTask !== '') {
                         el.text = editTask;
                     }
                     return el;
@@ -98,6 +103,12 @@ const App = () => {
         const value = e.target.value;
         setFilter(value)
     }
+
+    const onSetModal = (e, id) => {
+        const el = task.map(el => el.id === id ? el.text : '');
+        setOpenModal(openModal => !openModal);
+        setModalText(el);
+    } 
 
     const onSortTask = (arr, filter) => {
         switch (filter) {
@@ -130,10 +141,12 @@ const App = () => {
                 <TaskList 
                     tasks={onSortTask(currentItems, filter)} 
                     hendlerTask={hendlerTask} 
-                    onSetText={onSetText}/>
+                    onSetText={onSetText}
+                    onSetModal={onSetModal}/>
 
                 {task.length > 4 ? <Pagination itemsPerPage={itemsPerPage} totalItems={task.length} currentPage={currentPage} paginate={paginate}/> : null}
             </div>
+            {openModal ? <Modal onSetModal={onSetModal} text={modalText}/> : null}
         </div>
     );
 }
