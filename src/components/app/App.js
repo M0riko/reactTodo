@@ -1,6 +1,6 @@
 import './app.scss'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import Header from '../header/Header';
 import AppSort from '../appSort/AppSort';
@@ -8,6 +8,8 @@ import AppAddItem from '../appAddItem/AppAddItem'
 import TaskList from '../taskList/TaskList';
 import Pagination from '../pagination/Pagination'
 import Modal from '../modal/modal'
+import Error from '../error/Error';
+const itemsPerPage = 4;
 
 const App = () => {
     const tasks = JSON.parse(localStorage.getItem('userData')) || [];
@@ -26,11 +28,8 @@ const App = () => {
 
     const [modalText, setModalText] = useState('');
 
-    const itemsPerPage = 4;
-
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = task.slice(indexOfFirstItem, indexOfLastItem);
   
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
@@ -40,7 +39,24 @@ const App = () => {
             setCurrentPage(1)
         }
     }, [task])
+
+    const filterTodoTask = useMemo(() => {
+        if(filter === 'default') {
+            return task;
+        }
+
+        if(filter === 'true') {
+            return task.filter(e => e.done === true);
+        }
+
+        if(filter === 'false') {
+            return task.filter(e => e.done === false);
+        }
+        
+    }, [task, filter])
     
+    const filterTodoItems = filterTodoTask.slice(indexOfFirstItem, indexOfLastItem);
+
     const newTask = (e, text) => {
         e.preventDefault();
         const uId = Math.floor(Math.random() * 1000000) + 1;
@@ -49,11 +65,6 @@ const App = () => {
             SetTask(task => ([...task, newTask]))
             SetValue('')
         }
-    }
-
-    const onSetValue = (e) => {
-        const text = e.target.value;
-        SetValue(text)
     }
 
     const hendlerTask = (e, id) => { 
@@ -76,6 +87,9 @@ const App = () => {
                 SetTask(task.map(el => {
                     if(el.id === id) {
                         el.edit = !el.edit
+                    } else {
+                        el.edit = false;
+                        setEditTask('')
                     }
                     return el;
                 }))
@@ -104,27 +118,20 @@ const App = () => {
         setFilter(value)
     }
 
-    const onSetModal = (e, id) => {
-        const el = task.map(el => el.id === id ? el.text : '');
+    const onSetModal = (value) => {
+        const text = value
         setOpenModal(openModal => !openModal);
-        setModalText(el);
+        setModalText(text);
     } 
-
-    const onSortTask = (arr, filter) => {
-        switch (filter) {
-                case 'default' :
-                    return arr;
-                case 'true':
-                    return arr.filter(el => el.done);
-                case 'false': 
-                    return arr.filter(el => !el.done);
-                default : return arr;
-            }
-    }
 
     const onSetText = (e) => {
         const text = e.target.value;
         setEditTask(text)
+    }
+
+    const onSetValue = (e) => {
+        const text = e.target.value;
+        SetValue(text)
     }
 
     return (
@@ -139,14 +146,19 @@ const App = () => {
                     onSetValue={(e) => onSetValue(e)}/>
 
                 <TaskList 
-                    tasks={onSortTask(currentItems, filter)} 
+                    tasks={filterTodoItems} 
                     hendlerTask={hendlerTask} 
                     onSetText={onSetText}
                     onSetModal={onSetModal}/>
 
-                {task.length > 4 ? <Pagination itemsPerPage={itemsPerPage} totalItems={task.length} currentPage={currentPage} paginate={paginate}/> : null}
+                {filterTodoTask.length > 4 && <Pagination 
+                                                    itemsPerPage={itemsPerPage} 
+                                                    totalItems={filterTodoTask.length} 
+                                                    currentPage={currentPage} 
+                                                    paginate={paginate}/>}
             </div>
-            {openModal ? <Modal onSetModal={onSetModal} text={modalText}/> : null}
+            {openModal && <Modal onSetModal={onSetModal} text={modalText}/>}
+            {filterTodoTask.length < 1 && <Error/>}
         </div>
     );
 }

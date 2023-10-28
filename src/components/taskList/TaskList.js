@@ -3,19 +3,16 @@ import './taskList.scss';
 import Item from '../item/Item';
 
 const TaskList = ({tasks, hendlerTask, onSetText, onSetModal}) => {
-    const items = tasks.map((el, i) => {
-        return(<Item 
+    const items = tasks.map((el) => {
+        return( <Item 
                     text={el.text} 
-                    key={i} 
+                    key={el.id} 
                     id={el.id} 
                     done={el.done}
-                    del={() => hendlerTask('del', el.id)}
-                    sesss={() => hendlerTask('done', el.id)}
                     edit={el.edit}
-                    edits={() => hendlerTask('edit', el.id)}
-                    editText={() => hendlerTask('editText', el.id)}
                     onSetText={onSetText}
-                    onSetModal={() => onSetModal(null, el.id)}/>
+                    onSetModal={onSetModal}
+                    hendlerTask={hendlerTask}/>
                 )
     })
 
