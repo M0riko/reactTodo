@@ -17,8 +17,6 @@ const Pagination = ({ itemsPerPage, currentPage, paginate, filterTodoTask, total
         }
     }, [totalItemPage])
 
-
-
     const plusPage = () => {
         if(page < +totalItemPage) {
             setPage(page => page + 1);

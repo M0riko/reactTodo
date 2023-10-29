@@ -145,11 +145,11 @@ const App = () => {
                     value={value}
                     onSetValue={(e) => onSetValue(e)}/>
 
-                <TaskList 
+                {filterTodoTask.length < 1 ? <Error/> :<TaskList 
                     tasks={filterTodoItems} 
                     hendlerTask={hendlerTask} 
                     onSetText={onSetText}
-                    onSetModal={onSetModal}/>
+                    onSetModal={onSetModal}/>}
 
                 {filterTodoTask.length > 4 && <Pagination 
                                                     itemsPerPage={itemsPerPage} 
@@ -158,7 +158,7 @@ const App = () => {
                                                     paginate={paginate}/>}
             </div>
             {openModal && <Modal onSetModal={onSetModal} text={modalText}/>}
-            {filterTodoTask.length < 1 && <Error/>}
+            {/* {filterTodoTask.length < 1 && <Error/>} */}
         </div>
     );
 }
