@@ -153,16 +153,16 @@ const App = () => {
         }
     }
 
-    const onSetFilter = (e) => {
-        const value = e.target.value;
-        setFilter(value)
-    }
-
     const onSetModal = (value) => {
         const text = value
         setOpenModal(openModal => !openModal);
         setModalText(text);
     } 
+
+    const onSetFilter = (e) => {
+        const value = e.target.value;
+        setFilter(value)
+    }
 
     const onSetText = (e) => {
         const text = e.target.value;
