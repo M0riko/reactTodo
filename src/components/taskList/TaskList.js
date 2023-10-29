@@ -3,8 +3,10 @@ import './taskList.scss';
 import Item from '../item/Item';
 
 const TaskList = ({tasks, hendlerTask, onSetText, onSetModal}) => {
-    const items = tasks.map((el) => {
-        return( <Item 
+    return (
+        <div className="task-list">  
+            {tasks?.map(el => {
+                return( <Item 
                     text={el.text} 
                     key={el.id} 
                     id={el.id} 
@@ -14,11 +16,7 @@ const TaskList = ({tasks, hendlerTask, onSetText, onSetModal}) => {
                     onSetModal={onSetModal}
                     hendlerTask={hendlerTask}/>
                 )
-    })
-
-    return (
-        <div className="task-list">  
-            {items} 
+            })} 
         </div>
     );
 }

@@ -2,6 +2,8 @@ import './app.scss'
 
 import { useState, useEffect, useMemo } from 'react';
 
+import GetTasks from '../../service/getTasks';
+
 import Header from '../header/Header';
 import AppSort from '../appSort/AppSort';
 import AppAddItem from '../appAddItem/AppAddItem'
@@ -12,9 +14,41 @@ import Error from '../error/Error';
 const itemsPerPage = 4;
 
 const App = () => {
-    const tasks = JSON.parse(localStorage.getItem('userData')) || [];
 
-    const [task, SetTask] = useState(tasks);
+    const getTasks = new GetTasks();
+
+    const onRequest = () => {
+        getTasks
+            .getResource('http://localhost:3000/tasks')
+                .then(res => res.json())
+                .then(SetTask)
+                .catch(res => console.log('error'))
+
+    }
+
+    useEffect(() => {
+        onRequest();
+    }, [])
+
+    const postTask = (arr) => {
+            getTasks
+            .postResource('POST', 'http://localhost:3000/tasks', arr)
+                .then(data => JSON.stringify(data))
+                .then(data => data)
+                .catch(res => console.log('error'))
+    }
+
+    const onEdit = (id, task) => {
+        getTasks
+            .editResource(id, task)
+    }
+
+    const onDelete = (id) => {
+        getTasks
+            .deleteResource('http://localhost:3000/tasks', id)
+    } 
+
+    const [task, SetTask] = useState([]);
 
     const [value, SetValue] = useState('');
 
@@ -33,13 +67,6 @@ const App = () => {
   
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
-    useEffect(() => {
-        localStorage.setItem('userData', JSON.stringify(task));
-        if(task.length === 4) {
-            setCurrentPage(1)
-        }
-    }, [task])
-
     const filterTodoTask = useMemo(() => {
         if(filter === 'default') {
             return task;
@@ -54,9 +81,16 @@ const App = () => {
         }
         
     }, [task, filter])
-    
+
     const filterTodoItems = filterTodoTask.slice(indexOfFirstItem, indexOfLastItem);
 
+    useEffect(() => {
+        localStorage.setItem('userData', JSON.stringify(task));
+        if(task.length === 4) {
+            setCurrentPage(1)
+        }
+    }, [task])
+    
     const newTask = (e, text) => {
         e.preventDefault();
         const uId = Math.floor(Math.random() * 1000000) + 1;
@@ -64,7 +98,9 @@ const App = () => {
         if(text.length !== 0) {
             SetTask(task => ([...task, newTask]))
             SetValue('')
+            postTask(newTask)
         }
+        return newTask;
     }
 
     const hendlerTask = (e, id) => { 
@@ -72,6 +108,7 @@ const App = () => {
             case 'del': 
                 const filterTask = task.filter(el => el.id !== id);
                 SetTask(filterTask)
+                onDelete(id)
             break;
             case 'done' : 
                 const doneTask = task.map(el => {
@@ -82,6 +119,7 @@ const App = () => {
                     return el;
                 })
                 SetTask(doneTask)
+                onEdit(id, ...task.filter(el => el.id === id))
             break;
             case 'edit' : 
                 SetTask(task.map(el => {
@@ -108,6 +146,8 @@ const App = () => {
                     }
                     return el;
                 }))
+                onEdit(id, ...task.filter(el => el.id === id))
+
                 break;
             default: console.log(0);
         }
@@ -158,7 +198,6 @@ const App = () => {
                                                     paginate={paginate}/>}
             </div>
             {openModal && <Modal onSetModal={onSetModal} text={modalText}/>}
-            {/* {filterTodoTask.length < 1 && <Error/>} */}
         </div>
     );
 }
