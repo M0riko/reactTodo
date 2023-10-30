@@ -2,7 +2,7 @@ import './app.scss'
 
 import { useState, useEffect, useMemo } from 'react';
 
-import GetTasks from '../../service/getTasks';
+import { postTodo, deleteResource, editResource } from '../../service/getTasks';
 
 import Header from '../header/Header';
 import AppSort from '../appSort/AppSort';
@@ -15,38 +15,32 @@ const itemsPerPage = 4;
 
 const App = () => {
 
-    const getTasks = new GetTasks();
-
-    const onRequest = () => {
-        getTasks
-            .getResource('http://localhost:3000/tasks')
-                .then(res => res.json())
-                .then(SetTask)
-                .catch(res => console.log('error'))
-
+    const onRequest = async () => {
+        try {
+            await fetch('https://serverjson-2fgv-git-main-andreys-projects-ede7bc3b.vercel.app/todos')
+            .then(res => res.json())
+            .then(SetTask)
+            } catch (e) {
+                console.log(e);
+            }
     }
 
     useEffect(() => {
         onRequest();
+        // onDelTask(80826)
     }, [])
 
     const postTask = (arr) => {
-            getTasks
-            .postResource('POST', 'http://localhost:3000/tasks', arr)
-                .then(data => JSON.stringify(data))
-                .then(data => data)
-                .catch(res => console.log('error'))
+        postTodo('https://serverjson-2fgv-git-main-andreys-projects-ede7bc3b.vercel.app/todos', arr);
     }
 
-    const onEdit = (id, task) => {
-        getTasks
-            .editResource(id, task)
+    const onDelTask = (id) => {
+        deleteResource('https://serverjson-2fgv-git-main-andreys-projects-ede7bc3b.vercel.app/todos', id)
     }
 
-    const onDelete = (id) => {
-        getTasks
-            .deleteResource('http://localhost:3000/tasks', id)
-    } 
+    const onEdit = (id) =>{ 
+        editResource(id);
+    }
 
     const [task, SetTask] = useState([]);
 
@@ -104,11 +98,12 @@ const App = () => {
     }
 
     const hendlerTask = (e, id) => { 
+        onEdit(id, task.find(el => el.id === id));
         switch (e) {
             case 'del': 
                 const filterTask = task.filter(el => el.id !== id);
                 SetTask(filterTask)
-                onDelete(id)
+                onDelTask(id)
             break;
             case 'done' : 
                 const doneTask = task.map(el => {
@@ -119,12 +114,11 @@ const App = () => {
                     return el;
                 })
                 SetTask(doneTask)
-                onEdit(id, ...task.filter(el => el.id === id))
             break;
             case 'edit' : 
                 SetTask(task.map(el => {
                     if(el.id === id) {
-                        el.edit = !el.edit
+                        el.edit = true
                     } else {
                         el.edit = false;
                         setEditTask('')
@@ -146,8 +140,7 @@ const App = () => {
                     }
                     return el;
                 }))
-                onEdit(id, ...task.filter(el => el.id === id))
-
+                // onEdit(id, task.find(el => el.id === id));
                 break;
             default: console.log(0);
         }
