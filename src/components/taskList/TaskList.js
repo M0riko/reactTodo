@@ -1,8 +1,46 @@
 import './taskList.scss';
 
 import Item from '../item/Item';
+import { useState } from 'react';
+import { deleteResource, editResource } from '../../service/getTasks';
 
-const TaskList = ({tasks, hendlerTask, onSetText, onSetModal}) => {
+const TaskList = ({tasks, onSetModal, SetTask, task}) => {
+    const [editTask, setEditTask] = useState('');
+    const handlerTask = (e, id) => { 
+        if(e === 'del') {
+            SetTask(task.filter(el => el.id !== id));
+            deleteResource(id);
+        }
+
+        if(e === 'done') {
+            SetTask(task.map(el => {
+                if(el.id === id) el.done = !el.done;
+                return el
+            }))
+        }
+        
+        if(e === 'edit') {
+            SetTask(task.map(el => {
+                if(el.id === id) {
+                    el.edit = true
+                    setEditTask(el.text)
+                } else {
+                    el.edit = false;
+                }
+                return el;
+            }))
+        }
+
+        if(e === 'editText') {
+            SetTask(task.map(el => {
+                if(el.id === id && editTask !== '') {
+                    el.text = editTask;
+                    el.edit = false;
+                }
+                return el;
+            }))
+        }
+    }
     return (
         <div className="task-list">  
             {tasks?.map(el => {
@@ -12,9 +50,9 @@ const TaskList = ({tasks, hendlerTask, onSetText, onSetModal}) => {
                     id={el.id} 
                     done={el.done}
                     edit={el.edit}
-                    onSetText={onSetText}
+                    onSetText={setEditTask}
                     onSetModal={onSetModal}
-                    hendlerTask={hendlerTask}/>
+                    hendlerTask={handlerTask}/>
                 )
             })} 
         </div>

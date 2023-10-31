@@ -1,31 +1,34 @@
 import {useEffect, useState } from 'react';
 import './pagination.scss';
 
-const Pagination = ({ itemsPerPage, currentPage, paginate, filterTodoTask, totalItems }) => {
+const Pagination = ({itemsPerPage, items, setNumForPaginat}) => {
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const [page, setPage] = useState(1) 
+    const indexOfLastItem = currentPage * itemsPerPage;
 
-    const totalItemPage =  Math.ceil(totalItems / itemsPerPage);
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    const totalItemPage =  Math.ceil(items.length / itemsPerPage);
 
     useEffect(() => {
-        paginate(page)
-    }, [paginate, page])
+        setNumForPaginat(indexOfFirstItem, indexOfLastItem)
+    }, [indexOfFirstItem, indexOfLastItem])
 
     useEffect(() => {
-        if(totalItemPage < page ) {
-            setPage(totalItemPage)
-        }
-    }, [totalItemPage])
+        if(totalItemPage < currentPage ) {
+            setCurrentPage(totalItemPage)
+        }   
+    }, [currentPage, totalItemPage])
 
     const plusPage = () => {
-        if(page < +totalItemPage) {
-            setPage(page => page + 1);
+        if(currentPage < +totalItemPage) {
+            setCurrentPage(currentPage => currentPage + 1);
         }
     }
 
     const minusPage = () => {
-        if(page > 1) {
-            setPage(page => page - 1);
+        if(currentPage > 1) {
+            setCurrentPage(currentPage => currentPage - 1);
         }
     }
 

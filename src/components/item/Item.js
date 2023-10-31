@@ -8,7 +8,7 @@ const Item = ({text, id, done, edit, onSetText, onSetModal, hendlerTask}) => {
     return (
         <div id={id} className={`addTask task`} style={{display: 'flex'}}>
                 <form action="#" className={`change-task ${edit === false ? 'none' : ''}`}>
-                <input type="text" id="change-text" onChange={(e) => onSetText(e)} defaultValue={text}/>
+                <input type="text" id="change-text" onChange={(e) => onSetText(e.target.value)} defaultValue={text}/>
                 <button className="doneChange" onClick={() => hendlerTask('editText', id)}>EDIT</button>
                 </form>
                     <div className={`task-text ${done && 'line'} ${edit === false ? '' : 'none'}`} onClick={() => onSetModal(text)}>{text.length > 13 ? `${text.slice(0, 13)}...` : text}</div>

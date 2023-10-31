@@ -1,6 +1,6 @@
 
-export const postTodo = async (url, data) => {
-  const response = await fetch(url, {
+export const postTodo = async (data) => {
+  const response = await fetch('http://localhost:3000/tasks', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -10,12 +10,12 @@ export const postTodo = async (url, data) => {
   return response.json();
 }
 
-export const deleteResource = async (url, id) => {
-  await fetch(`${url}/${id}`, {
+export const deleteResource = async (id) => {
+  await fetch(`${'http://localhost:3000/tasks'}/${id}`, {
       method: 'DELETE'
     })
       .then(response => {
-        if (response.status === 500) {
+        if (response.status === 200) {
           console.log('Задача успешно удалена.');
         } else {
           console.log('Ошибка при удалении задачи.');
@@ -27,8 +27,7 @@ export const deleteResource = async (url, id) => {
 }
 
 export const editResource = async (id, task) => {
-  console.log(id, task);
-  fetch(`https://serverjson-2fgv-git-main-andreys-projects-ede7bc3b.vercel.app/todos/${id}`, {
+  fetch(`http://localhost:3000/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(task)
       })
@@ -39,4 +38,24 @@ export const editResource = async (id, task) => {
       .catch(error => {
           console.error('Ошибка при обновлении задачи:', error);
       });
+}
+
+
+export const onRequest = async () => {
+  try {
+      const response = await fetch('http://localhost:3000/tasks', {
+          method: "GET"
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          return data;
+      } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  } catch (error) {
+      console.error("An error occurred:", error);
+      // Можно выбросить ошибку или вернуть другое значение в зависимости от вашей логики
+      throw error;
+  }
 }
