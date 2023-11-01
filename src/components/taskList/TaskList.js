@@ -17,6 +17,7 @@ const TaskList = ({tasks, onSetModal, SetTask, task}) => {
                 if(el.id === id) el.done = !el.done;
                 return el
             }))
+            editResource(id, task.find(el => el.id === id));
         }
         
         if(e === 'edit') {
@@ -39,8 +40,10 @@ const TaskList = ({tasks, onSetModal, SetTask, task}) => {
                 }
                 return el;
             }))
+            editResource(id, task.find(el => el.id === id));
         }
     }
+
     return (
         <div className="task-list">  
             {tasks?.map(el => {

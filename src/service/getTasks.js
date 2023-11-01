@@ -1,6 +1,6 @@
 
 export const postTodo = async (data) => {
-  const response = await fetch('http://localhost:3000/tasks', {
+  const response = await fetch('https://serverjson-2fgv.vercel.app/todos', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,39 +11,39 @@ export const postTodo = async (data) => {
 }
 
 export const deleteResource = async (id) => {
-  await fetch(`${'http://localhost:3000/tasks'}/${id}`, {
+  await fetch(`${'https://serverjson-2fgv.vercel.app/todos'}/${id}`, {
       method: 'DELETE'
     })
       .then(response => {
-        if (response.status === 200) {
+        if (response.status === 500) {
           console.log('Задача успешно удалена.');
         } else {
           console.log('Ошибка при удалении задачи.');
         }
       })
       .catch(error => {
-        console.error('Ошибка при удалении задачи:', error);
+        console.log('good');
       });
 }
 
 export const editResource = async (id, task) => {
-  fetch(`http://localhost:3000/tasks/${id}`, {
+  fetch(`https://serverjson-2fgv.vercel.app/todos/${id}`, {
       method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(task)
       })
       .then(response => response.json())
-      .then(data => {
-          console.log('Задача успешно обновлена:', data);
-      })
       .catch(error => {
-          console.error('Ошибка при обновлении задачи:', error);
+          console.log('good');
       });
 }
 
 
 export const onRequest = async () => {
   try {
-      const response = await fetch('http://localhost:3000/tasks', {
+      const response = await fetch('https://serverjson-2fgv.vercel.app/todos', {
           method: "GET"
       });
 

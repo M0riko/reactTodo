@@ -47,6 +47,7 @@ const App = () => {
         <div className='container'>
             <Header totalTask={filterTask}/>
             <div className="content">
+
                 <AppSort 
                     task={task}
                     onSetFilterTask={setFilterTask}/>
@@ -62,11 +63,12 @@ const App = () => {
                 {filterTask.length > 4 && <Pagination 
                                                     itemsPerPage={itemsPerPage} 
                                                     items={filterTask} 
-                                                    setNumForPaginat={onSetNumForPaginat}
-                                                    />}
+                                                    setNumForPaginat={onSetNumForPaginat}/>}
             </div>
             
-            {openModal && <Modal onSetModal={onSetModal} text={modalText}/>}
+            {openModal && <Modal 
+                            onSetModal={onSetModal}  
+                            text={modalText}/>}
         </div>
     );
 }
