@@ -6,7 +6,7 @@ import { deleteResource, editResource } from '../../service/getTasks';
 
 const TaskList = ({tasks, onSetModal, SetTask, task}) => {
     const [editTask, setEditTask] = useState('');
-    const handlerTask = (e, id) => { 
+    const handlerTask = (e, id, event) => { 
         if(e === 'del') {
             SetTask(task.filter(el => el.id !== id));
             deleteResource(id);
@@ -33,6 +33,7 @@ const TaskList = ({tasks, onSetModal, SetTask, task}) => {
         }
 
         if(e === 'editText') {
+            event.preventDefault()
             SetTask(task.map(el => {
                 if(el.id === id && editTask !== '') {
                     el.text = editTask;

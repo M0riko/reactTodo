@@ -9,7 +9,7 @@ const Item = ({text, id, done, edit, onSetText, onSetModal, hendlerTask}) => {
         <div id={id} className={`addTask task`} style={{display: 'flex'}}>
                 <form action="#" className={`change-task ${edit === false ? 'none' : ''}`}>
                 <input type="text" id="change-text" onChange={(e) => onSetText(e.target.value)} defaultValue={text}/>
-                <button className="doneChange" onClick={() => hendlerTask('editText', id)}>EDIT</button>
+                <button className="doneChange" onClick={(event) => hendlerTask('editText', id, event)}>EDIT</button>
                 </form>
                     <div className={`task-text ${done && 'line'} ${edit === false ? '' : 'none'}`} onClick={() => onSetModal(text)}>{text.length > 13 ? `${text.slice(0, 13)}...` : text}</div>
                     <div className="task-buttons">

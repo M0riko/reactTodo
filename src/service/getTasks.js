@@ -55,7 +55,6 @@ export const onRequest = async () => {
       }
   } catch (error) {
       console.error("An error occurred:", error);
-      // Можно выбросить ошибку или вернуть другое значение в зависимости от вашей логики
       throw error;
   }
 }
