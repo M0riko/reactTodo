@@ -1,11 +1,22 @@
 import './taskList.scss';
 
 import Item from '../item/Item';
+import Pagination from '../pagination/Pagination'
+import Modal from '../modal/modal';
+
 import { useState } from 'react';
 import { deleteResource, editResource } from '../../service/getTasks';
 
-const TaskList = ({tasks, onSetModal, SetTask, task}) => {
+const TaskList = ({SetTask, task}) => {
+    
     const [editTask, setEditTask] = useState('');
+
+    const [showTask, setShowTask] = useState([]);
+
+    const [openModal, setOpenModal] = useState(false);
+
+    const [modalText, setModalText] = useState('');
+
     const handlerTask = (e, id, event) => { 
         if(e === 'del') {
             SetTask(task.filter(el => el.id !== id));
@@ -45,9 +56,15 @@ const TaskList = ({tasks, onSetModal, SetTask, task}) => {
         }
     }
 
+    const onSetModal = (value) => {
+        setOpenModal(openModal => !openModal);
+        setModalText(value);
+    } 
+
     return (
+        <>
         <div className="task-list">  
-            {tasks?.map(el => {
+            {showTask?.map(el => {
                 return( <Item 
                     text={el.text} 
                     key={el.id} 
@@ -60,6 +77,9 @@ const TaskList = ({tasks, onSetModal, SetTask, task}) => {
                 )
             })} 
         </div>
+        <Pagination filterTask={task} setShowTask={setShowTask}/>
+        {openModal && <Modal onSetModal={onSetModal} text={modalText}/>}
+        </>
     );
 }
 
